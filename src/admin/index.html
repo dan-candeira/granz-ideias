@@ -1,15 +1,82 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>Content Manager</title>
-    </head>
-    <body>
-        <!-- Include the script that builds the page and powers Netlify CMS -->
-        <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Manager</title>
+  </head>
+  <body>
+    <!-- Include the script that builds the page and powers Netlify CMS -->
+    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
 
-        <!-- Netlify Identity Widget -->
-        <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    </body>
+    <!-- Netlify Identity Widget -->
+    <script
+      type="text/javascript"
+      src="https://identity.netlify.com/v1/netlify-identity-widget.js"
+    ></script>
+
+    <script>
+      CMS.registerEditorComponent({
+        // Internal id of the component
+        id: "float-image",
+        // Visible label
+        label: "Float image",
+        // Fields the user need to fill out when adding an instance of the component
+        fields: [
+          {
+            name: "image",
+            label: "Image",
+            widget: "image",
+          },
+          {
+            name: "alt",
+            label: "Alt",
+            widget: "string",
+          },
+          {
+            name: "title",
+            label: "Title",
+            widget: "string",
+          },
+          {
+            name: "float",
+            label: "Float",
+            widget: "select",
+            options: ["off", "left", "right"],
+          },
+        ],
+        pattern: /(^<figure.*?<\/figure>$)/ms,
+        fromBlock: function (match) {
+          const div = document.createElement("div");
+          div.innerHTML = match[0];
+          const figure = div.getElementsByTagName("figure")[0];
+          const img = div.getElementsByTagName("img")[0];
+          const caption = div.getElementsByTagName("figcaption")[0];
+
+          return {
+            image: img.getAttribute("src") || "",
+            title: caption.innerText || "",
+            alt: img.getAttribute("alt") || "",
+            float: figure.getAttribute("data-float") || "off",
+          };
+        },
+        toBlock: function (data) {
+          return `
+                <figure data-float="${data.float || "off"}">
+                    <img src="${data.image || ""}" alt="${data.alt || ""}" />
+                    <figcaption>${data.title || ""}</figcaption>
+                </figure>
+            `.trim();
+        },
+        toPreview: function (data) {
+            return `
+                <figure data-float="${data.float || "off"}">
+                    <img src="${data.image || ""}" alt="${data.alt || ""}" />
+                    <figcaption>${data.title || ""}</figcaption>
+                </figure>
+            `.trim();
+        },
+      });
+    </script>
+  </body>
 </html>
