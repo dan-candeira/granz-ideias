@@ -3,8 +3,8 @@ backend:
   name: git-gateway
   branch: main
   ### enable below lines for github integration ###
-  name: github
-  repo: dan-candeira/granz-ideias
+  # name: github
+  # repo: dan-candeira/granz-ideias
 media_folder: "src/static/img"
 public_folder: "/static/img"
 
