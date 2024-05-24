@@ -18,3 +18,14 @@ body :not(pre) > code[class*="language-"],
 body pre[class*="language-"] {
   @apply bg-gray-800;
 }
+
+
+figure:not([data-float="left"]) {
+  float: left;
+  margin-left: 0.5rem;
+}
+
+figure:not([data-float="right"]) {
+  float: right;
+  margin-right: 0.5rem;
+}
